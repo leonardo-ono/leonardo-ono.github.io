@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JS Text Snake</title>
+</head>
+<body onkeydown="keyPressed(event.code)">
+
+<h2>JS Text Snake</h2>
+
+<p><p/>
+
+<pre id="screen"></pre>
+
+<p id="hud"/>
+
+<p><p/>
+by O.L.
+
+<p><p/>
+source: <a href="https://github.com/leonardo-ono/leonardo-ono.github.io/blob/master/snake/index.html">https://github.com/leonardo-ono/leonardo-ono.github.io/blob/master/snake/index.html</a>
+
+xxx
+
+<!-- begin wwww.htmlcommentbox.com -->
+<div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">HTML </a> is loading comments...</div>
+<link rel="stylesheet" type="text/css" href="https://www.htmlcommentbox.com/static/skins/bootstrap/twitter-bootstrap.css?v=0" />
+<script type="text/javascript" id="hcb"> /*<!--*/ if(!window.hcb_user){hcb_user={};} (function(){var s=document.createElement("script"), l=hcb_user.PAGE || (""+window.location).replace(/'/g,"%27"), h="https://www.htmlcommentbox.com";s.setAttribute("type","text/javascript");s.setAttribute("src", h+"/jread?page="+encodeURIComponent(l).replace("+","%2B")+"&opts=16862&num=10&ts=1582813995098");if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})(); /*-->*/ </script>
+<!-- end www.htmlcommentbox.com -->
+
+<script>
+
+var started = false;
+var gameover = false;
+var terrain = [];
+var direction = 11; // right
+var snakeHead = [7, 20];
+var snake = [snakeHead]
+var food = [0, 0]
+
+createTerrain();
+createFood()
+
+var mainLoopTimer = setInterval(mainLoop, 200);
+
+function createTerrain() {
+    terrain.length = 15;
+    for (var y = 0; y < 15; y++) {
+		terrain[y] = [];
+    	terrain[y].length = 15;
+    }
+}
+
+function createFood() {
+	// TODO: needs to check if new random position is valid
+    food[0] = 1 + Math.floor(13 * Math.random()); // y
+    food[1] = 1 + Math.floor(38 * Math.random()); // x
+}
+
+function keyPressed(keyCode) {
+	if (!started) {
+		started = true;
+	}
+
+    switch(keyCode) {
+    	case "ArrowLeft"  : direction = 9; break;
+    	case "ArrowRight" : direction = 11; break;
+    	case "ArrowUp"    : direction = 6; break;
+    	case "ArrowDown"  : direction = 14; break;
+    }
+
+	// console.log("newDirection=" + newDirection + " direction = " + direction + " " + Date());
+}
+
+function mainLoop() {
+	update();
+	draw();
+}
+
+function update() {
+	if (gameover) {
+		clearInterval(mainLoopTimer);
+		return;
+	}
+    updateTerrain();
+    if (started) {
+		snakeHead[1] += (direction & 3) - 2;
+		snakeHead[0] += (direction >> 2) - 2;
+    }
+	if (snakeHead[1] == food[1] && snakeHead[0] == food[0]) {
+		createFood();
+	}
+	else {
+		snake.shift();
+	}
+	snake.push([snakeHead[0], snakeHead[1]]);
+	snake.forEach(p => {
+		if (terrain[p[0]][p[1]] == "#") {
+			gameover = true;
+		}
+		terrain[p[0]][p[1]] = "#";
+	});
+	terrain[food[0]][food[1]] = "*";
+}
+
+function updateTerrain() {
+    for (var y = 0; y < 15; y++) {
+        for (var x = 0; x < 40; x++) {
+        	if (x == 0 || y == 0 || x == 39 || y == 14) {
+    			terrain[y][x] = "#";
+        	}
+        	else {
+    			terrain[y][x] = " ";
+        	}
+        }
+    }	
+}
+
+function draw() {
+    var line = "";
+	terrain.forEach(value => line += value.join("") + "\n" );
+	document.getElementById("screen").innerHTML = line;
+	if (started) {
+    	var message = (gameover ? "GAME OVER ! " : "") + "SCORE: " + (snake.length - 1)
+    	+ (gameover ? "<p/>Refresh (F5) the page to play again." : "");
+	}
+	else {
+		var message = "Press any key to start";
+	}
+	document.getElementById("hud").innerHTML = message;
+}    
+
+</script>
+</body>
+</html>
