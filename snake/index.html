@@ -7,6 +7,8 @@
 
 <h2>JS Text Snake</h2>
 
+<b>Controls:</b> use A, S, D and W keys to move the snake.
+
 <p><p/>
 
 <pre id="screen"></pre>
@@ -62,13 +64,13 @@ function keyPressed(keyCode) {
 	}
 
     switch(keyCode) {
-    	case "ArrowLeft"  : direction = 9; break;
-    	case "ArrowRight" : direction = 11; break;
-    	case "ArrowUp"    : direction = 6; break;
-    	case "ArrowDown"  : direction = 14; break;
+    	case "ArrowLeft", "KeyA"  : direction = 9; break;
+    	case "ArrowRight", "KeyD" : direction = 11; break;
+    	case "ArrowUp", "KeyW"    : direction = 6; break;
+    	case "ArrowDown", "KeyS"  : direction = 14; break;
     }
 
-	// console.log("newDirection=" + newDirection + " direction = " + direction + " " + Date());
+	console.log("keyCode=" + keyCode + " direction = " + direction + " " + Date());
 }
 
 function mainLoop() {
